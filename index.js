@@ -1,14 +1,40 @@
 const inquirer = require('inquirer');
-const Manager = require('./lib/Manager');
-const Engineer = require('./lib/Engineer');
-const Intern = require('./lib/Intern');
 const generatePage = require('./src/template');
 const writeFile = require('./utils/generate');
 
-const promptProject = () => {
+const promptUser = () => {
+  return inquirer.prompt([
+    {
+      type: 'input',
+      name: 'name',
+      message: 'What is the name of your project?',
+      validate: projectNameInput => {
+        if (projectNameInput) {
+          return true;
+        } else {
+          console.log('Please enter your project name!');
+          return false;
+        }
+      }
+    }
+  ]);
+};
 
-    return inquirer.prompt([
-      {
+
+const promptProject = (portfolioData) => {
+
+  // If there's no 'projects' array property, create one
+if (!portfolioData.projects) {
+  portfolioData.projects = [];
+}
+  console.log(`
+=================
+Add a New Project
+=================
+`);
+
+  return inquirer.prompt([
+    {
         type: 'input',
         name: 'employeeName',
         message: 'Enter the employee’s name',
@@ -48,35 +74,27 @@ const promptProject = () => {
         }
       },
       {
-        type: 'input',
-        name: 'officeNum',
-        message: 'Enter the employee’s office number',
-        validate: input => {
-          if (input) {
-            return true;
-          } else {
-            console.log('Please enter the employee’s office number!');
-            return false;
-          }
-        }
+        type: 'confirm',
+        name: 'confirmAddProject',
+        message: 'Would you like to enter another project?',
+        default: false
       }
-    //   ,
-    //   {
-    //     type: 'list',
-    //     name: 'license',
-    //     message: 'Choose a license for your application from the list of options',
-    //     choices: ['Apache', 'Boost', 'Eclipse']
-    //   }
-    ]);
+  ]).then(projectData => {
+    portfolioData.projects.push(projectData);
+    if (projectData.confirmAddProject) {
+      return promptProject(portfolioData);
+    } else {
+      return portfolioData;
+    }
+  });
 };
 
-promptProject()
-.then(log => {
-    return generatePage(log);
+
+promptUser()
+  .then(promptProject)
+  .then(portfolioData => {
+    return generatePage(portfolioData);
   })
-  .then(pageREADME => {
-    return writeFile(pageREADME);
+  .then(pageHTML => {
+    return writeFile(pageHTML);
   })
-// .then((log) => {
-//     new Manager(log).printStats();
-// })
