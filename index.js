@@ -1,100 +1,122 @@
 const inquirer = require('inquirer');
 const generatePage = require('./src/template');
 const writeFile = require('./utils/generate');
+const Manager = require ('./lib/Manager');
+const Engineer = require ('./lib/Engineer');
+const Intern = require ('./lib/Intern');
 
-const promptUser = () => {
-  return inquirer.prompt([
-    {
-      type: 'input',
-      name: 'name',
-      message: 'What is the name of your project?',
-      validate: projectNameInput => {
-        if (projectNameInput) {
-          return true;
-        } else {
-          console.log('Please enter your project name!');
-          return false;
-        }
-      }
-    }
-  ]);
-};
+const app = () => {
+  
+  if (!this.array) {
+  this.array = [];
+  }
 
-
-const promptProject = (portfolioData) => {
-
-  // If there's no 'projects' array property, create one
-if (!portfolioData.projects) {
-  portfolioData.projects = [];
-}
-  console.log(`
-=================
-Add a New Project
-=================
-`);
-
-  return inquirer.prompt([
+  this.newMember;
+    
+  inquirer.prompt([
     {
         type: 'input',
         name: 'employeeName',
         message: 'Enter the employee’s name',
-        validate: input => {
-          if (input) {
-            return true;
-          } else {
-            console.log('Please enter the employee’s name!');
-            return false;
-          }
-        }
       },
       {
         type: 'input',
         name: 'employeeId',
         message: 'Enter the employee’s id',
-        validate: input => {
-          if (input) {
-            return true;
-          } else {
-            console.log('Please enter the employee’s id!');
-            return false;
-          }
-        }
       },
       {
         type: 'input',
         name: 'employeeEmail',
         message: 'Enter the employee’s email',
-        validate: input => {
-          if (input) {
-            return true;
-          } else {
-            console.log('Please enter the employee’s email!');
-            return false;
-          }
-        }
       },
       {
-        type: 'confirm',
-        name: 'confirmAddProject',
-        message: 'Would you like to enter another project?',
-        default: false
+        type: 'list',
+        name: 'employeeRole',
+        message: 'What is your employee role',
+        choices: ["Manager", "Engineer", "Intern"],
       }
-  ]).then(projectData => {
-    portfolioData.projects.push(projectData);
-    if (projectData.confirmAddProject) {
-      return promptProject(portfolioData);
-    } else {
-      return portfolioData;
+  ]).then(data => {
+    if (data.employeeRole ==="Manager"){
+      this.newMember = new Manager(data.employeeName, data.employeeId, data.employeeEmail, data.employeeRole);
+
+      inquirer.prompt([
+        {
+          type: 'input',
+          name: 'officeNumber',
+          message: 'Enter the employee office number',
+        },
+        {
+          type: 'confirm',
+          name: 'confirmEmployee',
+          message: 'Would you like to add more employees?',
+          default: false,
+        }
+      ]).then(data => {
+        this.newMember.officeNumber = data.officeNumber;
+        this.array.push(this.newMember);
+        if (data.confirmEmployee) {
+          return app();
+        } else {
+          return this.newMember;
+        }
+      });
+    } else if (data.employeeRole ==="Engineer"){
+      this.newMember = new Engineer(data.employeeName, data.employeeId, data.employeeEmail, data.employeeRole);
+
+      inquirer.prompt([
+        {
+          type: 'input',
+          name: 'gitHub',
+          message: 'Enter the employee github',
+        },
+        {
+          type: 'confirm',
+          name: 'confirmEmployee',
+          message: 'Would you like to add more employees?',
+          default: false,
+        }
+      ]).then(data => {
+        this.newMember.gitHub = data.gitHub;
+        this.array.push(this.newMember);
+        if (data.confirmEmployee) {
+          return app();
+        } else {
+          return this.newMember;
+        }
+      });
+    } else if (data.employeeRole ==="Intern"){
+      this.newMember = new Intern(data.employeeName, data.employeeId, data.employeeEmail, data.employeeRole);
+
+      inquirer.prompt([
+        {
+          type: 'input',
+          name: 'school',
+          message: 'Enter the employee school',
+        },
+        {
+          type: 'confirm',
+          name: 'confirmEmployee',
+          message: 'Would you like to add more employees?',
+          default: false,
+        }
+      ]).then(data => {
+        this.newMember.school = data.school;
+        this.array.push(this.newMember);
+        if (data.confirmEmployee) {
+          return app();
+        } else {
+          return this.array;
+        }
+      });
     }
-  });
-};
-
-
-promptUser()
-  .then(promptProject)
-  .then(portfolioData => {
-    return generatePage(portfolioData);
+  }).then(data => {
+    return generatePage(data);
+    
   })
   .then(pageHTML => {
     return writeFile(pageHTML);
   })
+  
+};
+
+app();
