@@ -1,18 +1,12 @@
 const inquirer = require('inquirer');
 const generatePage = require('./src/template');
-const writeFile = require('./utils/generate');
 const Manager = require ('./lib/Manager');
 const Engineer = require ('./lib/Engineer');
 const Intern = require ('./lib/Intern');
+const array = [];
 
 const app = () => {
-  
-  if (!this.array) {
-  this.array = [];
-  }
 
-  this.newMember;
-    
   inquirer.prompt([
     {
         type: 'input',
@@ -37,7 +31,8 @@ const app = () => {
       }
   ]).then(data => {
     if (data.employeeRole ==="Manager"){
-      this.newMember = new Manager(data.employeeName, data.employeeId, data.employeeEmail, data.employeeRole);
+
+      const manager = new Manager(data.employeeName, data.employeeId, data.employeeEmail, data.employeeRole);
 
       inquirer.prompt([
         {
@@ -52,16 +47,16 @@ const app = () => {
           default: false,
         }
       ]).then(data => {
-        this.newMember.officeNumber = data.officeNumber;
-        this.array.push(this.newMember);
+        manager.officeNumber = data.officeNumber;
+        array.push(manager);
         if (data.confirmEmployee) {
           return app();
         } else {
-          return this.newMember;
+          generatePage(manager);
         }
-      });
+      })
     } else if (data.employeeRole ==="Engineer"){
-      this.newMember = new Engineer(data.employeeName, data.employeeId, data.employeeEmail, data.employeeRole);
+      const engineer = new Engineer(data.employeeName, data.employeeId, data.employeeEmail, data.employeeRole);
 
       inquirer.prompt([
         {
@@ -76,16 +71,16 @@ const app = () => {
           default: false,
         }
       ]).then(data => {
-        this.newMember.gitHub = data.gitHub;
-        this.array.push(this.newMember);
+        engineer.gitHub = data.gitHub;
+        array.push(engineer);
         if (data.confirmEmployee) {
           return app();
         } else {
-          return this.newMember;
+          generatePage(engineer)
         }
-      });
+      })
     } else if (data.employeeRole ==="Intern"){
-      this.newMember = new Intern(data.employeeName, data.employeeId, data.employeeEmail, data.employeeRole);
+      const intern = new Intern(data.employeeName, data.employeeId, data.employeeEmail, data.employeeRole);
 
       inquirer.prompt([
         {
@@ -100,21 +95,15 @@ const app = () => {
           default: false,
         }
       ]).then(data => {
-        this.newMember.school = data.school;
-        this.array.push(this.newMember);
+        intern.school= data.school;
+        array.push(intern);
         if (data.confirmEmployee) {
           return app();
         } else {
-          return this.array;
+          generatePage(intern)
         }
       });
     }
-  }).then(data => {
-    return generatePage(data);
-    
-  })
-  .then(pageHTML => {
-    return writeFile(pageHTML);
   })
   
 };
