@@ -52,7 +52,8 @@ const app = () => {
         if (data.confirmEmployee) {
           return app();
         } else {
-          generatePage(manager);
+          for( i=0; i<array.length; i++)
+          {generatePage(array[i])}
         }
       })
     } else if (data.employeeRole ==="Engineer"){
@@ -76,7 +77,8 @@ const app = () => {
         if (data.confirmEmployee) {
           return app();
         } else {
-          generatePage(engineer)
+          for( i=0; i<array.length; i++)
+          {generatePage(array[i])}
         }
       })
     } else if (data.employeeRole ==="Intern"){
@@ -102,33 +104,11 @@ const app = () => {
         } else {
           for( i=0; i<array.length; i++)
           {generatePage(array[i])}
-          // generatePage(intern)
         }
       });
     }
   })
 
-
 };
-
-// function another (){
-//   inquirer.prompt([
-//     {
-//       type: 'confirm',
-//       name: 'confirmEmployee',
-//       message: 'Would you like to add more employees?',
-//       default: false,
-//     }
-//   ]).then(data => {
-//     if (data.confirmEmployee) {
-//       return app();
-//     } else {
-//       for( i=0; i<array.length; i++)
-//       {generatePage(array[i])}
-//     }
-//   });
-// };
-  
-
 
 app();

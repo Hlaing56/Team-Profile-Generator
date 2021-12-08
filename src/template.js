@@ -16,38 +16,33 @@ const page =
 
 <header>
 <h1>My Team</h1>
-</header>`
-
+</header>
+<div class="container">`
 
 
 const managerCard = 
-`<div class="container">
-    <div class="card col-4 m-3 p-3">
-    <h3>${data.name}</h3>
+`<div class="card col-4 m-3 p-3">
+    <h3>${data.role}:${data.name}</h3>
     ID: ${data.id}
     <br>
     Email: ${data.email}
     <br>
     Office Number: ${data.officeNumber}
-    </div> 
-</div>`
+    </div>`
 
 const engineerCard = 
-`<div class="container">
-    <div class="card col-4 m-3 p-3">
-    <h3>${data.name}</h3>
+`<div class="card col-4 m-3 p-3">
+    <h3>${data.role}:${data.name}</h3>
     ID: ${data.id}
     <br>
     Email: ${data.email}
     <br>
     gitHub: ${data.gitHub}
-    </div>
-</div>`
+    </div>`
 
 const internCard = 
-`<div class="container">
-    <div class="card col-4 m-3 p-3">
-    <h3>${data.name}</h3>
+`<div class="card col-4 m-3 p-3">
+    <h3>${data.role}:${data.name}</h3>
     ID: ${data.id}
     <br>
     Email: ${data.email}
@@ -55,6 +50,8 @@ const internCard =
     School: ${data.school}
     </div>
 </div>`
+
+
 
 fs.writeFile('./dist/index.html', page, err => {
     if (err) {
@@ -65,8 +62,6 @@ fs.writeFile('./dist/index.html', page, err => {
 
 data = JSON.stringify(data);
 data = JSON.parse(data);
-console.log(data.name);
-console.log(data.role);
 switch(data.role){
     case "Manager": fs.appendFile('./dist/index.html', managerCard, err => {
         if (err) {

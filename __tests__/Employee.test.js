@@ -23,13 +23,8 @@ test("can set email by const arg", () => {
     expect (e.email).toBe(testValue);
 });
 
-//test getId() {}
 test("can getId via getId()", () => {
     const testValue = 56;
     const e = new Employee("Foo", testValue);
     expect (e.getId()).toBe(testValue);
 });
-
-//test getName() {}
-//test getrole() {}
-//test getEmail() {}
